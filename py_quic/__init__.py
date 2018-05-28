@@ -1,4 +1,4 @@
-import py_quic
+from . import py_quic
 import numpy as np
 
 
@@ -45,7 +45,7 @@ def quic(S, L, mode="default", tol=1e-6, max_iter=1000, X0=None, W0=None,\
         Ln, Lm = L.shape
         assert (Ln==Sn) and (Lm==Sn), "QUIC:dimensions\n" +\
                 "The regularization parameter L is not a scalar or a matching matrix."
-        assert L.dtype is np.float64, "QUIC:type\n" +\
+        assert L.dtype is np.dtype(np.float64), "QUIC:type\n" +\
             "Expected a double regularization parameter matrix L."
         _L = L
  
@@ -78,10 +78,10 @@ def quic(S, L, mode="default", tol=1e-6, max_iter=1000, X0=None, W0=None,\
         assert W0 is not None, "QUIC:initializations\n" +\
                 "You specified an initial value for X0 but not for W0."
 
-        assert X0.dtype is np.float64, "QUIC:type\n" +\
+        assert X0.dtype is np.dtype(np.float64), "QUIC:type\n" +\
             "Expected a double initial inverse covariance matrix X0."
 
-        assert W0.dtype is np.float64, "QUIC:type\n" +\
+        assert W0.dtype is np.dtype(np.float64), "QUIC:type\n" +\
             "Expected a double initial covariance matrix W0."
 
         X0n, X0m = X0.shape
@@ -120,7 +120,7 @@ def quic(S, L, mode="default", tol=1e-6, max_iter=1000, X0=None, W0=None,\
     dGap = np.zeros(optSize)
     iters = np.zeros(iterSize, dtype=np.uint32)
 
-    py_quic.quic(mode, Sn, S, _L, pathLen, path, tol, msg, max_iter,\
+    py_quic.quic(mode.encode(), Sn, S, _L, pathLen, path, tol, msg, max_iter,\
             X, W, opt, cputime, iters, dGap)
 
     if optSize == 1:
